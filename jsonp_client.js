@@ -1,6 +1,7 @@
 function jsonPClient(urlTarget, success, error) {
     var stamp = new Date().valueOf();
-    var callbackName = 'jsonPClient_' + Math.round(10000 * Math.random());
+    var callbackName = 'jsonPClient_' + Math.random().toString().replace('0.', '');
+    
     window[callbackName] = function(data){
         cleanUp();
         success(data);
