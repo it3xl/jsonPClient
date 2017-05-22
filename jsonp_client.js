@@ -1,17 +1,19 @@
 function jsonPClient(urlTarget, success, error) {
-    var stamp = new Date().valueOf();
-    var callbackName = 'jsonPClient_' + Math.random().toString().replace('0.', '');
+    var hash = Math.random().toString()
+        .replace('0.', '');
+    var callbackName = 'jsonp_client_' + hash;
     
     window[callbackName] = function(data){
         cleanUp();
         success(data);
     }
 
-    var src = urlTarget + '?callback=' + callbackName;
-
     var scriptTarget = document.createElement('script');
     scriptTarget.async = "async";
     //scriptTarget.charset = ...
+    
+    var stamp = new Date().valueOf();
+    var src = urlTarget + '?callback=' + callbackName + '&stamp=' + stamp;
     scriptTarget.src = src;
 
     scriptTarget.onerror = function(a, b, c){
