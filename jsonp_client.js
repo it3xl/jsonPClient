@@ -1,24 +1,28 @@
 function jsonPClient(urlTarget, success, error) {
+    successSafe = success || function(){};
+    errorSafe = error || function(){};
+
     var hash = Math.random().toString()
         .replace('0.', '');
     var callbackName = 'jsonp_client_' + hash;
-    
+
     window[callbackName] = function(data){
         cleanUp();
-        success(data);
+        successSafe(data);
     }
 
     var scriptTarget = document.createElement('script');
-    scriptTarget.async = "async";
+    scriptTarget.type = 'text/javascript';
+    scriptTarget.async = true;
     //scriptTarget.charset = ...
-    
+
     var stamp = new Date().valueOf();
     var src = urlTarget + '?callback=' + callbackName + '&stamp=' + stamp;
     scriptTarget.src = src;
 
     scriptTarget.onerror = function(a, b, c){
         cleanUp();
-        error(a, b, c);
+        errorSafe(a, b, c);
     };
 
     var scriptHost = getScriptHost();
